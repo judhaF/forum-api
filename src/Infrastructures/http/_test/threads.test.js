@@ -3,6 +3,7 @@ const UsersTableTestHelper = require('../../../../tests/UsersTableTestHelper');
 const CommentsTableTestHelper = require('../../../../tests/CommentsTableTestHelper');
 const RepliesTableTestHelper = require('../../../../tests/RepliesTableTestHelper');
 const ThreadsTableTestHelper = require('../../../../tests/ThreadsTableTestHelper');
+const CommentLikesTableTestHelper = require('../../../../tests/CommentLikesTableTestHelper');
 const pool = require('../../database/postgres/pool');
 const container = require('../../container');
 const createServer = require('../createServer');
@@ -688,6 +689,145 @@ describe('/threads endpoint', () => {
         },
       });
       const responseJson = JSON.parse(response.payload);
+      // Assert
+      expect(response.statusCode).toEqual(404);
+      expect(responseJson.status).toEqual('fail');
+    });
+  });
+  describe('When PUT /threads/{threadId}/comments/{commentId}/likes', () => {
+    it('should response 200 and add comment_likes', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({});
+      await ThreadsTableTestHelper.addThread({});
+      await CommentsTableTestHelper.addComment({});
+      const server = await createServer(container);
+      // Action
+      const response = await server.inject({
+        method: 'PUT',
+        url: '/threads/thread-123/comments/comment-123/likes',
+        auth: {
+          credentials: { id: 'user-123' },
+          strategy: 'forumapi_jwt',
+        },
+      });
+      const responseJson = JSON.parse(response.payload);
+      const likes = await CommentLikesTableTestHelper.findCommentLikesById('comment-123', 'user-123');
+      // Assert
+      expect(response.statusCode).toEqual(200);
+      expect(responseJson.status).toEqual('success');
+      expect(likes.length).toEqual(1);
+    });
+    it('should response 200 and delete comment_likes', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({});
+      await ThreadsTableTestHelper.addThread({});
+      await CommentsTableTestHelper.addComment({});
+      await CommentLikesTableTestHelper.addCommentLike({});
+
+      const server = await createServer(container);
+
+      // Action
+      const response = await server.inject({
+        method: 'PUT',
+        url: '/threads/thread-123/comments/comment-123/likes',
+        auth: {
+          credentials: { id: 'user-123' },
+          strategy: 'forumapi_jwt',
+        },
+      });
+      const responseJson = JSON.parse(response.payload);
+      const likes = await CommentLikesTableTestHelper.findCommentLikesById('comment-123', 'user-123');
+
+      // Assert
+      expect(response.statusCode).toEqual(200);
+      expect(responseJson.status).toEqual('success');
+      expect(likes.length).toEqual(0);
+    });
+    it('should response 401 when not include jwt token', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({});
+      await ThreadsTableTestHelper.addThread({});
+      await CommentsTableTestHelper.addComment({});
+      await CommentLikesTableTestHelper.addCommentLike({});
+
+      const server = await createServer(container);
+
+      // Action
+      const response = await server.inject({
+        method: 'PUT',
+        url: '/threads/thread-123/comments/comment-123/likes',
+      });
+      const responseJson = JSON.parse(response.payload);
+
+      // Assert
+      expect(response.statusCode).toEqual(401);
+      expect(responseJson.error).toEqual('Unauthorized');
+    });
+    it('should response 404 when thread not exist', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({});
+      await ThreadsTableTestHelper.addThread({});
+      await CommentsTableTestHelper.addComment({});
+
+      const server = await createServer(container);
+
+      // Action
+      const response = await server.inject({
+        method: 'PUT',
+        url: '/threads/thread-345/comments/comment-123/likes',
+        auth: {
+          credentials: { id: 'user-123' },
+          strategy: 'forumapi_jwt',
+        },
+      });
+      const responseJson = JSON.parse(response.payload);
+
+      // Assert
+      expect(response.statusCode).toEqual(404);
+      expect(responseJson.status).toEqual('fail');
+    });
+    it('should response 404 when comment not exist', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({});
+      await ThreadsTableTestHelper.addThread({});
+      await CommentsTableTestHelper.addComment({});
+
+      const server = await createServer(container);
+
+      // Action
+      const response = await server.inject({
+        method: 'PUT',
+        url: '/threads/thread-123/comments/comment-345/likes',
+        auth: {
+          credentials: { id: 'user-123' },
+          strategy: 'forumapi_jwt',
+        },
+      });
+      const responseJson = JSON.parse(response.payload);
+
+      // Assert
+      expect(response.statusCode).toEqual(404);
+      expect(responseJson.status).toEqual('fail');
+    });
+    it('should response 404 when user not exist', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({});
+      await ThreadsTableTestHelper.addThread({});
+      await CommentsTableTestHelper.addComment({});
+
+      const server = await createServer(container);
+
+      // Action
+      const response = await server.inject({
+        method: 'PUT',
+        url: '/threads/thread-123/comments/comment-123/likes',
+        auth: {
+          credentials: { id: 'user-345' },
+          strategy: 'forumapi_jwt',
+        },
+      });
+      const responseJson = JSON.parse(response.payload);
+
       // Assert
       expect(response.statusCode).toEqual(404);
       expect(responseJson.status).toEqual('fail');
