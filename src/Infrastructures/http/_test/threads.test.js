@@ -158,7 +158,7 @@ describe('/threads endpoint', () => {
       expect(responseJson.status).toEqual('fail');
     });
   });
-  describe('When GET /thread/:threadId', () => {
+  describe('When GET /threads/:threadId', () => {
     it('should response 200 code and persisted thread detail', async () => {
       // Arrange
       await UsersTableTestHelper.addUser({});
