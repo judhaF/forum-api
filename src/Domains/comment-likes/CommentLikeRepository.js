@@ -1,5 +1,5 @@
 class CommentLikeRepository {
-  async findByUserIdAndCommentId(userId, commentId) {
+  async verifyAvailableId(userId, commentId) {
     throw new Error('COMMENT_LIKE_REPOSITORY.METHOD_NOT_IMPLEMENTED');
   }
 
