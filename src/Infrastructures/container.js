@@ -22,11 +22,17 @@ const ThreadRepositoryPostgres = require('./repository/ThreadRepositoryPostgres'
 const CommentRepository = require('../Domains/comments/CommentRepository');
 const CommentRepositoryPostgres = require('./repository/CommentsRepositoryPostgres');
 
+// CommentLikes
+const CommentLikeRepository = require('../Domains/comment-likes/CommentLikeRepository');
+const CommentLikeRepositoryPostgres = require('./repository/CommentLikeRepositoryPostgres');
+
 // use case
 const UserUseCase = require('../Applications/use_case/UserUseCase');
 const ThreadUseCase = require('../Applications/use_case/ThreadUseCase');
 const CommentUseCase = require('../Applications/use_case/CommentUseCase');
 const ReplyUseCase = require('../Applications/use_case/ReplyUseCase');
+const CommentLikeUseCase = require('../Applications/use_case/CommentLikeUseCase');
+
 // Users
 const AuthenticationTokenManager = require('../Applications/security/AuthenticationTokenManager');
 const JwtTokenManager = require('./security/JwtTokenManager');
@@ -91,6 +97,17 @@ container.register([
         },
         {
           concrete: nanoid,
+        },
+      ],
+    },
+  },
+  {
+    key: CommentLikeRepository.name,
+    Class: CommentLikeRepositoryPostgres,
+    parameter: {
+      dependencies: [
+        {
+          concrete: pool,
         },
       ],
     },
@@ -191,6 +208,31 @@ container.register([
     parameter: {
       injectType: 'destructuring',
       dependencies: [
+        {
+          name: 'commentRepository',
+          internal: CommentRepository.name,
+        },
+        {
+          name: 'threadRepository',
+          internal: ThreadRepository.name,
+        },
+        {
+          name: 'userRepository',
+          internal: UserRepository.name,
+        },
+      ],
+    },
+  },
+  {
+    key: CommentLikeUseCase.name,
+    Class: CommentLikeUseCase,
+    parameter: {
+      injectType: 'destructuring',
+      dependencies: [
+        {
+          name: 'commentLikeRepository',
+          internal: CommentLikeRepository.name,
+        },
         {
           name: 'commentRepository',
           internal: CommentRepository.name,

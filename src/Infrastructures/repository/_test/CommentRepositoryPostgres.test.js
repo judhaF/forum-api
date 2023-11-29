@@ -140,6 +140,7 @@ describe('CommentRepositoryPostgres', () => {
           date: actualComment[0].date,
           username: 'dicoding',
           isDelete: actualComment[0].is_delete,
+          likeCount: 0,
         }),
       ];
       // Assert

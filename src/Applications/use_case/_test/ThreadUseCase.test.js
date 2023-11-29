@@ -72,6 +72,7 @@ describe('ThreadUseCase', () => {
           date: new Date('2021-08-08T07:19:09.775Z'),
           content: 'sebuah comment',
           isDelete: false,
+          likeCount: 1,
         }),
         new CommentDetail({
           id: 'comment-_pby2_tmXV6bcvcdev8xa',
@@ -79,6 +80,7 @@ describe('ThreadUseCase', () => {
           date: new Date('2021-08-08T07:32:09.775Z'),
           content: 'sebuah comment',
           isDelete: true,
+          likeCount: 0,
         }),
       ];
       mockComments[0].replies = [
@@ -112,6 +114,7 @@ describe('ThreadUseCase', () => {
             date: new Date('2021-08-08T07:19:09.775Z'),
             content: 'sebuah comment',
             isDelete: false,
+            likeCount: 1,
           }),
           new CommentDetail({
             id: 'comment-_pby2_tmXV6bcvcdev8xa',
@@ -119,6 +122,7 @@ describe('ThreadUseCase', () => {
             date: new Date('2021-08-08T07:32:09.775Z'),
             content: 'sebuah comment',
             isDelete: true,
+            likeCount: 0,
           }),
         ]));
       mockReplyRepository.getRepliesByThreadId = jest.fn()
@@ -171,6 +175,7 @@ describe('ThreadUseCase', () => {
           date: new Date('2021-08-08T07:19:09.775Z'),
           content: 'sebuah comment',
           isDelete: false,
+          likeCount: 1,
         }),
         new CommentDetail({
           id: 'comment-_pby2_tmXV6bcvcdev8xa',
@@ -178,6 +183,7 @@ describe('ThreadUseCase', () => {
           date: new Date('2021-08-08T07:32:09.775Z'),
           content: 'sebuah comment',
           isDelete: true,
+          likeCount: 0,
         }),
       ];
       const replies = [];
@@ -205,6 +211,7 @@ describe('ThreadUseCase', () => {
           date: new Date('2021-08-08T07:19:09.775Z'),
           content: 'sebuah comment',
           isDelete: false,
+          likeCount: 1,
         }),
         new CommentDetail({
           id: 'comment-_pby2_tmXV6bcvcdev8xa',
@@ -212,6 +219,7 @@ describe('ThreadUseCase', () => {
           date: new Date('2021-08-08T07:32:09.775Z'),
           content: 'sebuah comment',
           isDelete: true,
+          likeCount: 0,
         }),
       ];
       const replies = [
