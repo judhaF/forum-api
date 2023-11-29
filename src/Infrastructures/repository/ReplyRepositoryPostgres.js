@@ -57,6 +57,7 @@ class ReplyRepositoryPostgres extends ReplyRepository {
       FROM replies as re
       LEFT JOIN users ON users.id = re.owner_id
       WHERE re.thread_id=$1
+      ORDER BY re.date ASC
         `,
       values: [threadId],
     };

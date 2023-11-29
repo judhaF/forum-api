@@ -21,6 +21,7 @@ describe('a CommentDetail entities', () => {
       isDelete: 'salah',
       username: true,
       date: '2023',
+      likeCount: 12.2,
     };
 
     // Action & Assert
@@ -35,6 +36,7 @@ describe('a CommentDetail entities', () => {
       isDelete: false,
       username: 'dicoding',
       date: new Date(),
+      likeCount: 1,
     };
 
     // Action
@@ -45,6 +47,7 @@ describe('a CommentDetail entities', () => {
     expect(newComment.username).toEqual(payload.username);
     expect(newComment.content).toEqual(payload.content);
     expect(newComment.date).toEqual(payload.date);
+    expect(newComment.likeCount).toEqual(payload.likeCount);
   });
   it('should make newComment.contentto be **komentar telah dihapus** when isDelete is true', () => {
     // Arrange
@@ -54,6 +57,7 @@ describe('a CommentDetail entities', () => {
       isDelete: true,
       username: 'dicoding',
       date: new Date(),
+      likeCount: 10,
     };
 
     // Action
@@ -64,5 +68,6 @@ describe('a CommentDetail entities', () => {
     expect(newComment.username).toEqual(payload.username);
     expect(newComment.content).toEqual('**komentar telah dihapus**');
     expect(newComment.date).toEqual(payload.date);
+    expect(newComment.likeCount).toEqual(payload.likeCount);
   });
 });
